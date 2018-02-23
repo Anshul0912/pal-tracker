@@ -70,19 +70,27 @@ public class TimeEntryControllerTest {
         );
         doReturn(expected).when(timeEntryRepository).list();
 
+
         ResponseEntity<List<TimeEntry>> response = controller.list();
+
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
     public void testUpdate() throws Exception {
+        TimeEntry fields = new TimeEntry(987L, 654L, LocalDate.parse("2017-01-07"), 4);
         TimeEntry expected = new TimeEntry(1L, 987L, 654L, LocalDate.parse("2017-01-07"), 4);
+
         doReturn(expected)
                 .when(timeEntryRepository)
-                .update(eq(1L), any(TimeEntry.class));
+                .update(1L, fields);
 
-        ResponseEntity response = controller.update(1L, expected);
+
+        ResponseEntity response = controller.update(1L, fields);
+
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expected);
     }

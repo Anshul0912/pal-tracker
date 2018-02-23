@@ -2,7 +2,9 @@ package test.pivotal.pal.tracker;
 
 import io.pivotal.pal.tracker.InMemoryTimeEntryRepository;
 import io.pivotal.pal.tracker.TimeEntry;
+import io.pivotal.pal.tracker.TimeEntryRepository;
 import org.junit.Test;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class InMemoryTimeEntryRepositoryTest {
     @Test
     public void create() throws Exception {
-        InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
+        TimeEntryRepository repo = new InMemoryTimeEntryRepository();
         TimeEntry createdTimeEntry = repo.create(new TimeEntry(123L, 456L, LocalDate.parse("2017-01-08"), 8));
 
         TimeEntry expected = new TimeEntry(1L, 123L, 456L, LocalDate.parse("2017-01-08"), 8);
@@ -25,7 +27,7 @@ public class InMemoryTimeEntryRepositoryTest {
 
     @Test
     public void find() throws Exception {
-        InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
+        TimeEntryRepository repo = new InMemoryTimeEntryRepository();
         repo.create(new TimeEntry(123L, 456L, LocalDate.parse("2017-01-08"), 8));
 
         TimeEntry expected = new TimeEntry(1L, 123L, 456L, LocalDate.parse("2017-01-08"), 8);
@@ -35,7 +37,7 @@ public class InMemoryTimeEntryRepositoryTest {
 
     @Test
     public void list() throws Exception {
-        InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
+        TimeEntryRepository repo = new InMemoryTimeEntryRepository();
         repo.create(new TimeEntry(123L, 456L, LocalDate.parse("2017-01-08"), 8));
         repo.create(new TimeEntry(789L, 654L, LocalDate.parse("2017-01-07"), 4));
 
@@ -43,12 +45,13 @@ public class InMemoryTimeEntryRepositoryTest {
                 new TimeEntry(1L, 123L, 456L, LocalDate.parse("2017-01-08"), 8),
                 new TimeEntry(2L, 789L, 654L, LocalDate.parse("2017-01-07"), 4)
         );
-        assertThat(repo.list()).isEqualTo(expected);
+        List<TimeEntry> actualList = repo.list();
+        assertThat(actualList).isEqualTo(expected);
     }
 
     @Test
     public void update() throws Exception {
-        InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
+        TimeEntryRepository repo = new InMemoryTimeEntryRepository();
         TimeEntry created = repo.create(new TimeEntry(123L, 456L, LocalDate.parse("2017-01-08"), 8));
 
         TimeEntry updatedEntry = repo.update(
@@ -62,7 +65,7 @@ public class InMemoryTimeEntryRepositoryTest {
 
     @Test
     public void delete() throws Exception {
-        InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
+        TimeEntryRepository repo = new InMemoryTimeEntryRepository();
         TimeEntry created = repo.create(new TimeEntry(123L, 456L, LocalDate.parse("2017-01-08"), 8));
 
         repo.delete(created.getId());
